@@ -1,7 +1,11 @@
 import { defineApp } from "@slflows/sdk/v1";
 import { listYourOrganizations } from "@sentry/api";
 import { blocks } from "./blocks/index.ts";
-import { getCreds, getClientOptions } from "./utils/client.ts";
+import {
+  getCreds,
+  getClientOptions,
+  extractErrorMessage,
+} from "./utils/client.ts";
 
 const installationInstructions = `## Setup
 
@@ -73,7 +77,7 @@ export const app = defineApp({
     if (response.error) {
       return {
         newStatus: "failed",
-        customStatusDescription: `Could not validate Sentry auth token: ${(response.error as any).detail ?? response.error}`,
+        customStatusDescription: `Could not validate Sentry auth token: ${extractErrorMessage(response.error, String(response.error))}`,
       };
     }
 

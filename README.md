@@ -16,14 +16,12 @@ REST API.
 Setup requires creating an Internal Integration in Sentry -- the installation
 instructions in the app walk through this step by step.
 
-<!-- TODO: uncomment when Run API Request is implemented
 ## Blocks
 
 ### Request
 
 - **Run API Request** -- authenticated method/path/body/query request against
   the Sentry API (escape hatch).
--->
 
 <!-- TODO: uncomment when webhook blocks are implemented
 ### Events
