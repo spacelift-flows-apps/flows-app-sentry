@@ -23,11 +23,12 @@ instructions in the app walk through this step by step.
 - **Run API Request** -- authenticated method/path/body/query request against
   the Sentry API (escape hatch).
 
-<!-- TODO: uncomment when webhook blocks are implemented
 ### Events
 
 - **Any Event** -- receives any webhook event from Sentry, with optional
   resource/action filters (escape hatch).
+
+<!-- TODO: uncomment when typed webhook blocks are implemented
 - **Issue Created** -- triggers when a Sentry issue is first created.
 - **Issue Resolved** -- triggers when a Sentry issue is resolved.
 - **Issue Unresolved** -- triggers when a Sentry issue is unresolved.

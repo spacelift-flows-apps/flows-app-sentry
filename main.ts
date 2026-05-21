@@ -1,4 +1,9 @@
-import { defineApp } from "@slflows/sdk/v1";
+import {
+  defineApp,
+  blocks as blocksDef,
+  http,
+  messaging,
+} from "@slflows/sdk/v1";
 import { listYourOrganizations } from "@sentry/api";
 import { blocks } from "./blocks/index.ts";
 import {
@@ -6,6 +11,7 @@ import {
   getClientOptions,
   extractErrorMessage,
 } from "./utils/client.ts";
+import { verifySignature } from "./utils/signature.ts";
 
 const installationInstructions = `## Setup
 
@@ -55,6 +61,54 @@ export const app = defineApp({
       type: "string",
       required: true,
       sensitive: true,
+    },
+  },
+
+  http: {
+    onRequest: async (input) => {
+      if (
+        input.request.method !== "POST" ||
+        input.request.path !== "/webhook"
+      ) {
+        await http.respond(input.request.requestId, { statusCode: 404 });
+        return;
+      }
+
+      const { webhookClientSecret } = getCreds(input);
+
+      const sigKey = Object.keys(input.request.headers).find(
+        (h) => h.toLowerCase() === "sentry-hook-signature",
+      );
+      const signature = sigKey ? input.request.headers[sigKey] : undefined;
+
+      if (
+        !signature ||
+        !verifySignature(input.request.rawBody, signature, webhookClientSecret)
+      ) {
+        await http.respond(input.request.requestId, { statusCode: 401 });
+        return;
+      }
+
+      const resourceKey = Object.keys(input.request.headers).find(
+        (h) => h.toLowerCase() === "sentry-hook-resource",
+      );
+      const resource = resourceKey
+        ? input.request.headers[resourceKey]
+        : undefined;
+
+      const body = JSON.parse(input.request.rawBody);
+      const action = body.action as string | undefined;
+
+      const rawBlocks = await blocksDef.list({ typeIds: ["rawWebhook"] });
+
+      if (rawBlocks.blocks.length > 0) {
+        await messaging.sendToBlocks({
+          blockIds: rawBlocks.blocks.map((b) => b.id),
+          body: { resource, action, headers: input.request.headers, body },
+        });
+      }
+
+      await http.respond(input.request.requestId, { statusCode: 200 });
     },
   },
 
