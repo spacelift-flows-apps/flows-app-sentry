@@ -15,3 +15,10 @@ claude plugin install flows-app-dev@spacelift-flows-apps
 ```
 
 After installation, plugins need to be reloaded by the user via the `/reload-plugins` command or the session needs to be restarted. You will not be able to load a skill without this.
+
+## Maintenance notes
+
+- The `installationInstructions` in `main.ts` lists the recommended Sentry
+  permissions and webhook subscriptions. When adding new blocks that require
+  additional Sentry scopes or webhook resource types, update the setup guide to
+  match.

@@ -1,7 +1,9 @@
 {
+  "name": "flows-app-sentry",
   "type": "module",
   "dependencies": {
-    "@slflows/sdk": "^0.0.8",
+    "@sentry/api": "0.113.0",
+    "@slflows/sdk": "^0.13.0",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
@@ -11,7 +13,6 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "setup": "./setup.sh",
     "bundle": "npx flowctl version bundle -e main.ts",
     "format": "npx prettier --write .",
     "typecheck": "npx tsc --noEmit"
