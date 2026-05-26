@@ -46,6 +46,15 @@ export const app = defineApp({
       type: "string",
       required: true,
     },
+    // Internal Integration tokens are org-scoped, but the org slug can't be
+    // derived from the base URL (e.g. https://sentry.io works for any org).
+    organizationSlug: {
+      name: "Organization Slug",
+      description:
+        "The slug of the Sentry organization this integration belongs to.",
+      type: "string",
+      required: true,
+    },
     authToken: {
       name: "Auth Token",
       description:
@@ -123,9 +132,10 @@ export const app = defineApp({
       };
     }
 
+    // This only serves to verify the connection. For custom integrations, this
+    // endpoint returns [].
     const response = await listYourOrganizations({
       ...getClientOptions(input),
-      throwOnError: false,
     });
 
     if (response.error) {

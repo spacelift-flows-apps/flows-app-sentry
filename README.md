@@ -23,6 +23,11 @@ instructions in the app walk through this step by step.
 - **Run API Request** -- authenticated method/path/body/query request against
   the Sentry API (escape hatch).
 
+### Issues
+
+- **Get Issue** -- retrieves a Sentry issue by ID.
+- **Update Issue** -- updates a Sentry issue (resolve, ignore, assign, etc.).
+
 ### Events
 
 - **Any Event** -- receives any webhook event from Sentry, with optional
@@ -33,14 +38,6 @@ instructions in the app walk through this step by step.
 - **Issue Resolved** -- triggers when a Sentry issue is resolved.
 - **Issue Unresolved** -- triggers when a Sentry issue is unresolved.
 - **Alert Triggered** -- triggers when a Sentry alert rule fires.
--->
-
-<!-- TODO: uncomment when issue blocks are implemented
-### Issues
-
-- **Get Issue** -- retrieves a Sentry issue by ID.
-- **Update Issue** -- updates a Sentry issue (resolve, ignore, assign, etc.).
--->
 
 ## Development
 
