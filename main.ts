@@ -131,6 +131,8 @@ export const app = defineApp({
             typedTypeId = "issueUnresolved";
             break;
         }
+      } else if (resource === "event_alert") {
+        typedTypeId = "eventAlertTriggered";
       }
 
       if (typedTypeId) {

@@ -35,6 +35,7 @@ instructions in the app walk through this step by step.
 - **Issue Created** -- triggers when a Sentry issue is first created.
 - **Issue Resolved** -- triggers when a Sentry issue is resolved.
 - **Issue Unresolved** -- triggers when a Sentry issue is reopened.
+- **Alert Triggered** -- triggers when a Sentry alert rule fires.
 
 ## Development
 
