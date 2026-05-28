@@ -17,7 +17,9 @@ const installationInstructions = `## Setup
 
 1. Fill in your Sentry URL (e.g. \`https://my-org.sentry.io\`).
 
-2. In Sentry, go to **Settings > Developer Settings > Custom Integrations** and click **New Internal Integration**.
+2. Fill in your **Organization Slug** — visible in Sentry under **Settings > General Settings**.
+
+3. In Sentry, go to **Settings > Developer Settings > Custom Integrations** and click **New Internal Integration**.
    - **Name**: e.g. "Spacelift Flows".
    - **Webhook URL**: \`{appEndpointUrl}/webhook\`
    - **Permissions** — minimum recommended:
@@ -29,7 +31,7 @@ const installationInstructions = `## Setup
    - Save and copy the **Client Secret** into the **Webhook Client Secret** field.
    - Under **Tokens**, click **New Token** and copy the token into the **Auth Token** field (shown once).
 
-3. Confirm the app.
+4. Confirm the app.
 
 If you rotate the token in Sentry, update it here and re-sync.`;
 
