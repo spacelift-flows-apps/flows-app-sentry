@@ -17,7 +17,9 @@ const installationInstructions = `## Setup
 
 1. Fill in your Sentry URL (e.g. \`https://my-org.sentry.io\`).
 
-2. In Sentry, go to **Settings > Developer Settings > Custom Integrations** and click **New Internal Integration**.
+2. Fill in your **Organization Slug** — visible in Sentry under **Settings > General Settings**.
+
+3. In Sentry, go to **Settings > Developer Settings > Custom Integrations** and click **New Internal Integration**.
    - **Name**: e.g. "Spacelift Flows".
    - **Webhook URL**: \`{appEndpointUrl}/webhook\`
    - **Permissions** — minimum recommended:
@@ -29,7 +31,7 @@ const installationInstructions = `## Setup
    - Save and copy the **Client Secret** into the **Webhook Client Secret** field.
    - Under **Tokens**, click **New Token** and copy the token into the **Auth Token** field (shown once).
 
-3. Confirm the app.
+4. Confirm the app.
 
 If you rotate the token in Sentry, update it here and re-sync.`;
 
@@ -43,6 +45,15 @@ export const app = defineApp({
     baseUrl: {
       name: "Sentry URL",
       description: "Your Sentry URL (e.g. https://my-org.sentry.io).",
+      type: "string",
+      required: true,
+    },
+    // Internal Integration tokens are org-scoped, but the org slug can't be
+    // derived from the base URL (e.g. https://sentry.io works for any org).
+    organizationSlug: {
+      name: "Organization Slug",
+      description:
+        "The slug of the Sentry organization this integration belongs to.",
       type: "string",
       required: true,
     },
@@ -108,6 +119,34 @@ export const app = defineApp({
         });
       }
 
+      // Typed blocks receive just the body (pre-filtered by resource+action).
+      let typedTypeId: string | undefined;
+      if (resource === "issue") {
+        switch (action) {
+          case "created":
+            typedTypeId = "issueCreated";
+            break;
+          case "resolved":
+            typedTypeId = "issueResolved";
+            break;
+          case "unresolved":
+            typedTypeId = "issueUnresolved";
+            break;
+        }
+      } else if (resource === "event_alert") {
+        typedTypeId = "eventAlertTriggered";
+      }
+
+      if (typedTypeId) {
+        const typed = await blocksDef.list({ typeIds: [typedTypeId] });
+        if (typed.blocks.length > 0) {
+          await messaging.sendToBlocks({
+            blockIds: typed.blocks.map((b) => b.id),
+            body,
+          });
+        }
+      }
+
       await http.respond(input.request.requestId, { statusCode: 200 });
     },
   },
@@ -123,9 +162,10 @@ export const app = defineApp({
       };
     }
 
+    // This only serves to verify the connection. For custom integrations, this
+    // endpoint returns [].
     const response = await listYourOrganizations({
       ...getClientOptions(input),
-      throwOnError: false,
     });
 
     if (response.error) {
