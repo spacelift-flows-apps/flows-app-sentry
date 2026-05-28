@@ -1,4 +1,5 @@
-// Derived from the RetrieveAnIssueResponses["200"] type in @sentry/api.
+// Derived from the RetrieveAnIssueResponses["200"] type in @sentry/api,
+// plus fields present in API/webhook responses but not in the SDK types.
 // If more schemas are needed, consider generating them with
 // ts-json-schema-generator.
 
@@ -289,6 +290,34 @@ export const issueDetailSchema = {
     },
     userReportCount: {
       type: "number" as const,
+    },
+    isUnhandled: {
+      type: "boolean" as const,
+    },
+    issueCategory: {
+      type: "string" as const,
+    },
+    issueType: {
+      type: "string" as const,
+    },
+    priority: {
+      type: "string" as const,
+    },
+    substatus: {
+      type: "string" as const,
+    },
+    url: {
+      type: "string" as const,
+      description: "API URL for this issue.",
+    },
+    webUrl: {
+      type: "string" as const,
+      description: "Browser URL for this issue (web_url in webhook payloads).",
+    },
+    projectUrl: {
+      type: "string" as const,
+      description:
+        "Browser URL for the project's issue list (project_url in webhook payloads).",
     },
   },
   required: [

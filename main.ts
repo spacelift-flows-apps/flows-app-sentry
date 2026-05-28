@@ -117,6 +117,32 @@ export const app = defineApp({
         });
       }
 
+      // Typed blocks receive just the body (pre-filtered by resource+action).
+      let typedTypeId: string | undefined;
+      if (resource === "issue") {
+        switch (action) {
+          case "created":
+            typedTypeId = "issueCreated";
+            break;
+          case "resolved":
+            typedTypeId = "issueResolved";
+            break;
+          case "unresolved":
+            typedTypeId = "issueUnresolved";
+            break;
+        }
+      }
+
+      if (typedTypeId) {
+        const typed = await blocksDef.list({ typeIds: [typedTypeId] });
+        if (typed.blocks.length > 0) {
+          await messaging.sendToBlocks({
+            blockIds: typed.blocks.map((b) => b.id),
+            body,
+          });
+        }
+      }
+
       await http.respond(input.request.requestId, { statusCode: 200 });
     },
   },

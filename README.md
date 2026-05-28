@@ -32,12 +32,9 @@ instructions in the app walk through this step by step.
 
 - **Any Event** -- receives any webhook event from Sentry, with optional
   resource/action filters (escape hatch).
-
-<!-- TODO: uncomment when typed webhook blocks are implemented
 - **Issue Created** -- triggers when a Sentry issue is first created.
 - **Issue Resolved** -- triggers when a Sentry issue is resolved.
-- **Issue Unresolved** -- triggers when a Sentry issue is unresolved.
-- **Alert Triggered** -- triggers when a Sentry alert rule fires.
+- **Issue Unresolved** -- triggers when a Sentry issue is reopened.
 
 ## Development
 
